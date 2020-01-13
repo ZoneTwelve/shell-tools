@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+const s = {
+  str:"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM",
+  num:"0123456789",
+  sym:"~!@#$%^&*()_+=-][\\}{|\":';/.,?><",
+  all:"-"
+};
+s.all = (s.sym+s.num+s.str);
+//`QWERTYUIOPASDFGHJKLZXCVBNM1234567890~!@#$%^&*()_+=-\`?></.,":\][|}{qwertyuiopasdfghjklzxcvbnm`;
+function random(len, type){
+  let target = s[type].split("");
+  let str = target[~~(Math.random()*target.length)];
+  while(str.length<len){
+    let index = target.indexOf(str[str.length-1]);
+    let tmp = target.splice(index, 1);
+    str+=target[~~(Math.random()*target.length)];
+    target.splice(-1, 0, tmp);
+  }
+  return str;
+}
+let len = 16, type = "all";
+if(process.argv.length==4){
+  len = parseInt(process.argv[2]);
+  type = process.argv[3];
+}else if(process.argv.length==3){
+  len = parseInt(process.argv[2]);
+}else if(process.argv.length>3){
+  throw "Error: can't not solve the argument\n";
+}
+console.log(random(len, type));

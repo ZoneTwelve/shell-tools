@@ -1,0 +1,38 @@
+#!/bin/bash
+ROOT=$(pwd)
+if [ ! -z "$1" ]; then
+	if [ "${1:0:1}" = "/" ]; then
+		ROOT=$1
+	else
+		ROOT="$ROOT/$1"
+	fi
+fi
+if [ ! -d "$ROOT" ]; then
+	echo "$ROOT can not been attach"
+	exit 1
+fi
+cd $ROOT
+ROOT=$(pwd)
+echo -e "Currect path: $ROOT"
+if [ "$HOME" = "$ROOT" ] || [ "$ROOT" = "/" ];then
+  read -rep $'\e[31mYou ganna remove your HOME or ROOT directory, \e[0m\nYou sure you ganna do that? (Y for yes): ' REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Program is stop"
+    exit 0
+  fi
+fi
+len=$(ls $ROOT | grep -v '.backup' | wc -l)
+files=$(ls $ROOT | grep -v '.backup')
+backup="$(date +"%Y-%m-%d")"
+
+if [ -d "$ROOT/.backup/$backup" ]; then
+  backup="$(date +"%Y-%m-%d_%H-%M-%S")"
+fi
+
+echo "backup path: $ROOT/.backup/$backup"
+if [ ! "$len" = "0" ];then
+  mkdir -p "$ROOT/.backup/$backup"
+  mv $files "$ROOT/.backup/$backup"
+else
+  echo -e "\e[33mYou already don't have file here\e[0m"
+fi

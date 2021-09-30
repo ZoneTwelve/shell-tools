@@ -32,7 +32,10 @@ fi
 echo "backup path: $ROOT/.backup/$backup"
 if [ ! "$len" = "0" ];then
   mkdir -p "$ROOT/.backup/$backup"
-  mv $files "$ROOT/.backup/$backup"
+  for f in $files
+  do
+    mv $f "$ROOT/.backup/$backup"
+  done
 else
   echo -e "\e[33mYou already don't have file here\e[0m"
 fi
